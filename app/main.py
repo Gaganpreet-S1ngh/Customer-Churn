@@ -21,10 +21,40 @@ def home():
 
 @app.post("/predict")
 def predict(data: dict):
+    input_data = []
 
-    values = np.array([data[k] for k in sorted(data.keys())]).reshape(1, -1)
-    prediction = model.predict(values)
-    return {"churn": int(prediction[0])}
+    for col in FEATURE_COLUMNS:
+        val = data.get(col, default_values[col])
+
+        if col in label_encoders:
+            le = label_encoders[col]
+            val_str = str(val)
+            if val_str not in le.classes_:
+                default_str = str(default_values[col])
+                if default_str in le.classes_:
+                    val_str = default_str
+                else:
+                    val_str = le.classes_[0]
+            val = le.transform([val_str])[0]
+
+        input_data.append(val)
+
+    values = np.array(input_data).reshape(1, -1)
+
+    try:
+        prediction = model.predict(values)
+
+        if isinstance(prediction[0], str):
+            pred_map = {"No": 0, "Yes": 1}
+            churn_val = pred_map.get(prediction[0], 0)
+        else:
+            churn_val = int(prediction[0])
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Prediction error: {str(e)}")
+
+    return {"churn": churn_val}
+
 
 @app.get("/metrics")
 def metrics():
