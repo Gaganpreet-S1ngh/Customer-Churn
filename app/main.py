@@ -1,14 +1,22 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, HTTPException, Request, Response
 import joblib
 import numpy as np
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 
 app = FastAPI()
-
-
 REQUEST_COUNT = Counter("request_count", "Total requests")
 
 model = joblib.load("model/churn_model.pkl")
+label_encoders = joblib.load("model/label_encoders.pkl")
+default_values = joblib.load("model/default_values.pkl")
+
+FEATURE_COLUMNS = [
+    'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure',
+    'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity',
+    'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV',
+    'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod',
+    'MonthlyCharges', 'TotalCharges'
+]
 
 @app.middleware("http")
 async def count_requests(request: Request, call_next):
@@ -44,6 +52,7 @@ def predict(data: dict):
     try:
         prediction = model.predict(values)
 
+        
         if isinstance(prediction[0], str):
             pred_map = {"No": 0, "Yes": 1}
             churn_val = pred_map.get(prediction[0], 0)
@@ -54,7 +63,6 @@ def predict(data: dict):
         raise HTTPException(status_code=400, detail=f"Prediction error: {str(e)}")
 
     return {"churn": churn_val}
-
 
 @app.get("/metrics")
 def metrics():
