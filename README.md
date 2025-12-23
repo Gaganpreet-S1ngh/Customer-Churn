@@ -1,7 +1,8 @@
 # Customer Churn Prediction System
 
-An end-to-end Machine Learning project that predicts customer churn using structured customer data.  
-The project demonstrates the complete ML lifecycle: data preprocessing, model training, experiment tracking, API deployment, containerization, and monitoring.
+An end-to-end Machine Learning project that predicts customer churn using structured customer data.
+This project demonstrates the complete ML lifecycle including data preprocessing, model training,
+experiment tracking, API deployment, containerization, and monitoring.
 
 ---
 
@@ -32,98 +33,88 @@ The project demonstrates the complete ML lifecycle: data preprocessing, model tr
 
 customer-churn/
 │── app/
-│ └── main.py # FastAPI inference service
+│   └── main.py          # FastAPI inference service
 │── data/
-│ └── churn.csv # Dataset
+│   └── churn.csv        # Dataset
 │── model/
-│ └── churn_model.pkl # Trained model
-│── train.py # Model training pipeline
+│   └── churn_model.pkl  # Trained model
+│── train.py             # Model training pipeline
 │── requirements.txt
 │── Dockerfile
 │── README.md
-
-yaml
-Copy code
 
 ---
 
 ## ⚙️ Setup & Run (Local)
 
 ### 1️⃣ Clone repository
-```bash
+
 git clone https://github.com/Gaganpreet-S1ngh/Customer-Churn.git
 cd Customer-Churn
-2️⃣ Create virtual environment
-bash
-Copy code
+
+---
+
+### 2️⃣ Create virtual environment
+
 python -m venv venv
-Windows
 
-bash
-Copy code
+Windows:
 venv\Scripts\activate
-Mac/Linux
 
-bash
-Copy code
+Mac/Linux:
 source venv/bin/activate
-3️⃣ Install dependencies
-bash
-Copy code
+
+---
+
+### 3️⃣ Install dependencies
+
 pip install -r requirements.txt
-🧠 Train the Model
+
+---
+
+## 🧠 Train the Model
+
 Ensure dataset exists at:
-
-bash
-Copy code
 data/churn.csv
+
 Run:
-
-bash
-Copy code
 python train.py
+
 This will:
+- Preprocess data
+- Train and tune a RandomForest model
+- Log experiments using MLflow
+- Save the trained model to model/churn_model.pkl
 
-Preprocess data
+---
 
-Train and tune a RandomForest model
+## 📊 MLflow Tracking
 
-Log experiments using MLflow
-
-Save the trained model to model/churn_model.pkl
-
-📊 MLflow Tracking
 Start MLflow UI:
-
-bash
-Copy code
 mlflow ui
+
 Open:
-
-arduino
-Copy code
 http://localhost:5000
-🌐 Run Prediction API
-bash
-Copy code
+
+---
+
+## 🌐 Run Prediction API
+
 uvicorn app.main:app --reload
-API available at:
 
-cpp
-Copy code
+API:
 http://127.0.0.1:8000
-Swagger UI:
 
-arduino
-Copy code
+Swagger UI:
 http://127.0.0.1:8000/docs
-🔮 Prediction Endpoint
+
+---
+
+## 🔮 Prediction Endpoint
+
 POST /predict
 
 Example request:
-
-json
-Copy code
 {
   "gender": 1,
   "SeniorCitizen": 0,
@@ -134,28 +125,43 @@ Copy code
   "MonthlyCharges": 70.5,
   "TotalCharges": 840.0
 }
-Example response:
 
-json
-Copy code
+Example response:
 {
   "churn": 0
 }
-📈 Monitoring
+
+---
+
+## 📈 Monitoring
+
 Metrics endpoint:
-
-bash
-Copy code
 /metrics
-Exposes Prometheus-compatible metrics for request monitoring.
 
-🐳 Run with Docker
-bash
-Copy code
+Prometheus-compatible metrics for monitoring API usage.
+
+---
+
+## 🐳 Run with Docker
+
 docker build -t churn-api .
 docker run -p 8000:8000 churn-api
-Access API:
 
-arduino
-Copy code
+Access:
 http://localhost:8000
+
+---
+
+## ✅ Resume Highlights
+
+- Built an end-to-end ML pipeline for customer churn prediction
+- Implemented hyperparameter tuning and experiment tracking with MLflow
+- Deployed a containerized ML inference API using FastAPI and Docker
+- Integrated Prometheus monitoring
+
+---
+
+## 👤 Author
+
+Gaganpreet Singh  
+GitHub: https://github.com/Gaganpreet-S1ngh
